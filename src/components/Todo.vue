@@ -54,11 +54,7 @@
                     </div>
                     <input type="submit" value="Update" class="btn btn-primary" @click.prevent="updateItem()">
                 </form>
-                <template v-if="loader == true">
-                    <div id="loading">
-                        <img src="../assets/loader.gif">
-                    </div>
-                </template>
+                <Loader :loader_gif="loader"></Loader>
             </div>
         </template>
     </div>
@@ -101,6 +97,7 @@
 
 <script>
     import axios from 'axios'
+    import Loader from '@/components/Loader'
     export default {
         data: function () {
             return {
@@ -110,6 +107,9 @@
                 currentIndex: 0,
                 loader: false
             }
+        },
+        components: {
+            'Loader': Loader
         },
         mounted () {
             this.getTaskList()
