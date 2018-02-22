@@ -54,6 +54,11 @@
                     </div>
                     <input type="submit" value="Update" class="btn btn-primary" @click.prevent="updateItem()">
                 </form>
+                <template v-if="loader == true">
+                    <div id="loading">
+                        <img src="../assets/loader.gif">
+                    </div>
+                </template>
             </div>
         </template>
     </div>
@@ -82,6 +87,16 @@
         top: -2px;
         cursor: pointer;
     }
+    #loading {
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        top: 79px;
+        z-index: 100;
+    }
 </style>
 
 <script>
@@ -92,7 +107,8 @@
                 itemList: [],
                 tempData: {},
                 editForm: false,
-                currentIndex: 0
+                currentIndex: 0,
+                loader: false
             }
         },
         mounted () {
@@ -140,7 +156,7 @@
                 return this.$store.state.user.csrf_token
             },
             updateItem: function () {
-                console.log(this.csrf())
+                this.loader = true
                 let local = this
                 console.log(this.tempData)
                 let node_data = {
@@ -162,6 +178,7 @@
                         "X-CSRF-Token": local.csrf()
                     },
                 }).then(result=>{
+                    local.loader= false
                     local.editForm = false
                     local.itemList[this.currentIndex]['title'] = local.tempData['title1']
                     local.itemList[this.currentIndex]['body'] = local.tempData['description']
@@ -170,6 +187,7 @@
                     local.itemList[this.currentIndex]['field_deadline'] = local.tempData['deadline']
                 }).catch(function (error) {
                     console.log(error)
+                    local.loader = false
                 })
             },
             closeModel: function () {
